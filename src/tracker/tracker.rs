@@ -1,5 +1,5 @@
-use std::collections::btree_map::Entry;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
+use std::collections::hash_map::Entry;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
@@ -22,7 +22,7 @@ pub struct TorrentTracker {
     mode: TrackerMode,
     keys: RwLock<std::collections::HashMap<String, AuthKey>>,
     whitelist: RwLock<std::collections::HashSet<InfoHash>>,
-    torrents: RwLock<std::collections::BTreeMap<InfoHash, TorrentEntry>>,
+    torrents: RwLock<std::collections::HashMap<InfoHash, TorrentEntry>>,
     stats_tracker: StatsTracker,
     database: Box<dyn Database>
 }
@@ -40,7 +40,7 @@ impl TorrentTracker {
             mode: config.mode,
             keys: RwLock::new(std::collections::HashMap::new()),
             whitelist: RwLock::new(std::collections::HashSet::new()),
-            torrents: RwLock::new(std::collections::BTreeMap::new()),
+            torrents: RwLock::new(std::collections::HashMap::new()),
             stats_tracker,
             database
         })
@@ -209,7 +209,7 @@ impl TorrentTracker {
         }
     }
 
-    pub async fn get_torrents(&self) -> RwLockReadGuard<'_, BTreeMap<InfoHash, TorrentEntry>> {
+    pub async fn get_torrents(&self) -> RwLockReadGuard<'_, HashMap<InfoHash, TorrentEntry>> {
         self.torrents.read().await
     }
 
