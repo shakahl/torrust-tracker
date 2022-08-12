@@ -240,5 +240,8 @@ impl TorrentTracker {
                 torrent_entry.remove_inactive_peers(self.config.max_peer_timeout);
             }
         }
+
+        // release unneeded memory
+        torrents_lock.shrink_to_fit();
     }
 }
